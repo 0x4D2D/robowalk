@@ -11,8 +11,13 @@ download compiled jar from https://github.com/Saturn5Vfive/robowalk/raw/cf88e626
 ## How 2 uze
 
 Uhh type "robowalk on"
+
 robowalk off = turn it off
+
 robowalk on = turn it on
+
 robowalk debug on = turn on debug
+
 robowalk debug off = turn off debug
+
 robowalk = check if is working
