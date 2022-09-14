@@ -2,9 +2,11 @@ package tech.saturns.robowalk.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
+import net.minecraft.network.packet.c2s.play.VehicleMoveC2SPacket;
 import net.minecraft.text.Text;
 import tech.saturns.robowalk.Main;
 
@@ -52,6 +54,34 @@ public class ClientPlayNetworkHandlerMixin {
                     instance.player.networkHandler.getConnection().send(clone);
                 }
             }   
+        }
+        if(rawpacket instanceof VehicleMoveC2SPacket packet){
+            if(Main.enabled){
+                callback.cancel();
+                double x = Math.round(packet.getX() * 100.0) / 100.0; //round packets as best we can
+                double z = Math.round(packet.getZ() * 100.0) / 100.0;
+
+
+                if(Main.debug) sendChatMessage2("Sent [Vehicle] [X/Z]: " + x + ":" + z); //Main.debug log
+
+                long dx = ((long)(x * 1000)) % 10; //simulate the check that liveoverflow runs 
+                long dz = ((long)(z * 1000)) % 10;
+                if(Main.debug) sendChatMessage2("Calculated [Vehicle] [X/Z]: " + dx + ":" + dz);
+
+
+                if(dx != 0 || dz != 0){
+                    if(Main.debug) sendChatMessage2("Found packet [Vehicle] [DX/DZ] != 0, Modification Failed!, Aborting!!"); //drop these weird packets that sometimes get through 
+                    return;
+                }
+
+                Entity vehicle = instance.player.getVehicle();
+
+                vehicle.setPos(x, packet.getY(), z);
+
+                VehicleMoveC2SPacket movepacket = new VehicleMoveC2SPacket(vehicle);
+
+                instance.player.networkHandler.getConnection().send(movepacket);
+            }
         }
         if(rawpacket instanceof ChatMessageC2SPacket packet){
             String chat = packet.getChatMessage();
