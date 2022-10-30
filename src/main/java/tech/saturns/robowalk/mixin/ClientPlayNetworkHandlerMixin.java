@@ -8,9 +8,11 @@ import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.network.packet.c2s.play.VehicleMoveC2SPacket;
 import net.minecraft.text.Text;
+import net.minecraft.world.GameMode;
 import tech.saturns.robowalk.Main;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,6 +27,9 @@ public class ClientPlayNetworkHandlerMixin {
         if(rawpacket instanceof PlayerMoveC2SPacket packet){
             if(packet instanceof PlayerMoveC2SPacket.PositionAndOnGround || packet instanceof PlayerMoveC2SPacket.Full){
                 if(Main.enabled){
+                    MinecraftClient.getInstance().world.getWorldBorder().setCenter(0, 0);
+                    MinecraftClient.getInstance().world.getWorldBorder().setSize(5.9999968E7);
+
                     callback.cancel();
                     double x = Math.round(packet.getX(0) * 100.0) / 100.0; //round packets as best we can
                     double z = Math.round(packet.getZ(0) * 100.0) / 100.0;
@@ -110,6 +115,13 @@ public class ClientPlayNetworkHandlerMixin {
                 sendChatMessage("Robotic movement is now disabled, you can play normally!");
                 callback.cancel();
             } 
+            if(chat.equalsIgnoreCase("robowalk up")){
+                instance.player.setPos(instance.player.getPos().x, instance.player.getPos().y + 10, instance.player.getPos().z);
+            }
+            if(chat.equalsIgnoreCase("robowalk boat")){}
+            if(chat.equalsIgnoreCase("gs")){
+                MinecraftClient.getInstance().interactionManager.setGameMode(GameMode.SURVIVAL);
+            }
         }
     }
 
