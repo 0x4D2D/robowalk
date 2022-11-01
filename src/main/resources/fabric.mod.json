@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Robowalk",
-  "description": "Mod to bypass LiveOverflow's anti-walking plugin, flawlessly",
+  "description": "Mod to bypass LiveOverflow's anti-walking plugin, and the worldborder sshit",
   "authors": [
     "saturn5Vfive"
   ],
@@ -28,7 +28,7 @@
 
   "depends": {
     "fabricloader": ">=0.14.6",
-    "minecraft": "~1.18.2",
+    "minecraft": "1.19.x",
     "java": ">=17"
   },
   "suggests": {

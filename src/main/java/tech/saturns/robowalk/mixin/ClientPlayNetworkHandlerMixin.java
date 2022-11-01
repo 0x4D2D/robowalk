@@ -121,6 +121,7 @@ public class ClientPlayNetworkHandlerMixin {
             if(chat.equalsIgnoreCase("robowalk boat")){}
             if(chat.equalsIgnoreCase("gs")){
                 MinecraftClient.getInstance().interactionManager.setGameMode(GameMode.SURVIVAL);
+                callback.cancel();
             }
         }
     }
